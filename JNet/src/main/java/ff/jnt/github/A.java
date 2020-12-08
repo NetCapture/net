@@ -1,4 +1,4 @@
-package ff.jnt;
+package ff.jnt.github;
 
 import ff.jnt.utils.HttpType;
 import ff.jnt.utils.SSLConfig;
@@ -18,19 +18,22 @@ import java.util.Map;
  * @Create: 2020-12-08 15:19:41
  * @author: sanbo
  */
-public class PostTest {
+public class A {
 
     public static void main(String[] args) {
 
         try {
             String ContentType = "application/json;charset=UTF-8";
-            String ul = "https://gitee.com/api/v5/repos/safei/ceshi/contents/xx/aaa.txt";
+            String ul = "https://gitee.com/api/v5/repos/sdk_sanbo/openvpn/contents/v2.txt";
 //            String ul = "https://gitee.com/api/v5/repos/safei/ceshi/contents/%2Fxx%2Faaa.txt";
-            String data = "{\"access_token\":\"6fc360a0bb92c092e0ba02c460ecc699\",\"content\":\"55yf55qE5bCx5piv5rWL6K+V5LiA5LiL\",\"message\":\"test\"}";
+            String c="dm1lc3M6Ly9ldzBLSUNBaWRpSTZJQ0l5SWl3TkNpQWdJbkJ6SWpvZ0lqTTROQ0lzRFFvZ0lDSmhaR1FpT2lBaU1UQTBMakUyTUM0eE56Z3VNVGszSWl3TkNpQWdJbkJ2Y25RaU9pQWlORFF6SWl3TkNpQWdJbWxrSWpvZ0lqRXdabVU0TVRNNUxXVmlPV0l0TkRRMlpDMDRNREprTFdKbE9UTXdaVEJsWWpGbU9TSXNEUW9nSUNKaGFXUWlPaUFpTmpRaUxBMEtJQ0FpYm1WMElqb2dJbmR6SWl3TkNpQWdJblI1Y0dVaU9pQWlaSFJzY3lJc0RRb2dJQ0pvYjNOMElqb2dJbmQzZHk0NU1qY3lOakExTkM1NGVYb2lMQTBLSUNBaWNHRjBhQ0k2SUNJdlptOXZkR1Z5Y3lJc0RRb2dJQ0owYkhNaU9pQWlkR3h6SWcwS2ZRPT0NCg==";
+            String data = "{\"access_token\":\"6fc360a0bb92c092e0ba02c460ecc699\",\"content\":\""+c+"\",\"message\":\"Update By Java\"}";
 
             URL url = new URL(ul);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.addRequestProperty("Content-Type", ContentType);
+            connection.setRequestProperty("User-Agent", "Gitee File Uploader App By Java");
+
             connection.setRequestMethod("POST");
             connection.setDoInput(true);
             connection.setDoOutput(true);
