@@ -1,14 +1,14 @@
 package ff.jnt.cs;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import ff.jnt.NetUtils;
 import ff.jnt.utils.HttpType;
-import sun.misc.BASE64Encoder;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @Copyright © 2020 analysys Inc. All rights reserved.
@@ -20,25 +20,25 @@ import java.util.Map;
 public class GithubHelper {
 
 
-    public static void main(String[] args) {
-        String res = createFile("hhhaiai", "Picture", "/test/1.txt", "1e8704dac7b0a5d94116971f012d12732577d3bc", "真的就是测试一下", "Upload from Java");
-        System.out.println("链接: " + res);
-//        String sha = getSha("hhhaiai", "Picture", "/test/3.txt", "1e8704dac7b0a5d94116971f012d12732577d3bc");
-//        System.out.println("SHA:" + sha);
-
-//        updateContent("hhhaiai", "Picture", "/test/3.txt", "1e8704dac7b0a5d94116971f012d12732577d3bc", "#1 what‘s that? 土鳖", "Upload from Java");
-//        deleteFile("hhhaiai", "Picture", "/test/1.txt", "1e8704dac7b0a5d94116971f012d12732577d3bc", "delete s", "who", "lary@gg.com");
-//        deleteFile("hhhaiai", "Picture", "/test/2.txt", "1e8704dac7b0a5d94116971f012d12732577d3bc", "delete s", "who", "lary@gg.com");
-//        deleteFile("hhhaiai", "Picture", "/test/3.txt", "1e8704dac7b0a5d94116971f012d12732577d3bc", "delete s", "who", "lary@gg.com");
-//        deleteFile("hhhaiai", "Picture", "/test/6.txt", "1e8704dac7b0a5d94116971f012d12732577d3bc", "delete s", "who", "lary@gg.com");
-    }
+//    public static void main(String[] args) {
+//        String res = createFile("hhhaiai", "Picture", "/test/7.txt", "1e8704dac7b0a5d94116971f012d12732577d3bc", "真的就是测试一下", "Upload from Java");
+//        System.out.println("链接: " + res);
+////        String sha = getSha("hhhaiai", "Picture", "/test/3.txt", "1e8704dac7b0a5d94116971f012d12732577d3bc");
+////        System.out.println("SHA:" + sha);
+//
+////        updateContent("hhhaiai", "Picture", "/test/3.txt", "1e8704dac7b0a5d94116971f012d12732577d3bc", "#1 what‘s that? 土鳖", "Upload from Java");
+////        deleteFile("hhhaiai", "Picture", "/test/1.txt", "1e8704dac7b0a5d94116971f012d12732577d3bc", "delete s", "who", "lary@gg.com");
+////        deleteFile("hhhaiai", "Picture", "/test/2.txt", "1e8704dac7b0a5d94116971f012d12732577d3bc", "delete s", "who", "lary@gg.com");
+////        deleteFile("hhhaiai", "Picture", "/test/3.txt", "1e8704dac7b0a5d94116971f012d12732577d3bc", "delete s", "who", "lary@gg.com");
+////        deleteFile("hhhaiai", "Picture", "/test/6.txt", "1e8704dac7b0a5d94116971f012d12732577d3bc", "delete s", "who", "lary@gg.com");
+//    }
 
     private static void updateContent(String owner, String repo, String path, String token, String contentWillBase64, String commitMsg) {
         updateContent(owner, repo, path, token, contentWillBase64, commitMsg, "", "");
     }
 
     private static String updateContent(String owner, String repo, String path, String token, String contentWillBase64, String commitMsg, String username, String email) {
-        String content = new BASE64Encoder().encode(contentWillBase64.getBytes(StandardCharsets.UTF_8));
+        String content = Base64.getEncoder().encodeToString(contentWillBase64.getBytes(StandardCharsets.UTF_8));
         // 据RFC 822规定，每76个字符，还需要加上一个回车换行
         // 有时就因为这些换行弄得出了问题，解决办法如下，替换所有换行和回车
         // result = result.replaceAll("[\\s*\t\n\r]", "");
@@ -106,7 +106,7 @@ public class GithubHelper {
 
     private static String createFile(String owner, String repo, String path, String token, String contentWillBase64, String commitMsg, String username, String email) {
         try {
-            String content = new BASE64Encoder().encode(contentWillBase64.getBytes(StandardCharsets.UTF_8));
+            String content = Base64.getEncoder().encodeToString(contentWillBase64.getBytes(StandardCharsets.UTF_8));
             // 据RFC 822规定，每76个字符，还需要加上一个回车换行
             // 有时就因为这些换行弄得出了问题，解决办法如下，替换所有换行和回车
             // result = result.replaceAll("[\\s*\t\n\r]", "");
@@ -129,9 +129,14 @@ public class GithubHelper {
             int timeout = 10 * 1000;
             String res = NetUtils.request(HttpType.PUT, timeout, uploadUrl, null, reqHeaderMap, data);
 
-            JSONObject obj = JSON.parseObject(res);
-            if (obj.size() > 0) {
-                return obj.getJSONObject("content").getString("download_url");
+//            JSONObject obj = JSON.parseObject(res);
+//            if (obj.size() > 0) {
+//                return obj.getJSONObject("content").getString("download_url");
+//            }
+
+            Matcher matcher = Pattern.compile("\"download_url\": *\"([^\"]+)\"").matcher(res.toString());
+            if (matcher.find()) {
+                return matcher.group(1);
             }
         } catch (Throwable e) {
             e.printStackTrace();
@@ -155,21 +160,26 @@ public class GithubHelper {
             int timeout = 10 * 1000;
 
             String result = NetUtils.request(HttpType.GET, timeout, requestUrl, null, reqHeaderMap, null);
-//            System.out.println("result:" +result);
-            JSONObject obj = JSON.parseObject(result);
-//            System.out.println(obj);
-            if (obj.size() > 0) {
-                String url = obj.getString("url");
-//                System.out.println(url);
-//                System.out.println(requestUrl);
-                if (url.contains(requestUrl)) {
-//                    System.out.println("same requet url");
-                    return obj.getString("sha");
-                } else {
-                    System.err.println("request url diff!");
-                }
-            } else {
-                System.err.println("response json len is 0");
+////            System.out.println("result:" +result);
+//            JSONObject obj = JSON.parseObject(result);
+////            System.out.println(obj);
+//            if (obj.size() > 0) {
+//                String url = obj.getString("url");
+////                System.out.println(url);
+////                System.out.println(requestUrl);
+//                if (url.contains(requestUrl)) {
+////                    System.out.println("same requet url");
+//                    return obj.getString("sha");
+//                } else {
+//                    System.err.println("request url diff!");
+//                }
+//            } else {
+//                System.err.println("response json len is 0");
+//            }
+
+            Matcher matcher = Pattern.compile("\"sha\": *\"([^\"]+)\"").matcher(result.toString());
+            if (matcher.find()) {
+                return matcher.group(1);
             }
         } catch (Throwable e) {
             e.printStackTrace();

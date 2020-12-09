@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Base64;
 
-public class F {
+public class FileUtils {
 
     public static byte[] read(String file) {
         try {

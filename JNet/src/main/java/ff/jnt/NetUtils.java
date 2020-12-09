@@ -1,19 +1,13 @@
 package ff.jnt;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import ff.jnt.utils.Closer;
-import ff.jnt.utils.HttpType;
 import ff.jnt.utils.SSLConfig;
-import sun.misc.BASE64Encoder;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -49,7 +43,7 @@ public class NetUtils {
                 // 2. post data
                 postData(conn, data);
             }
-            return listenStatusCodeAndProcess(conn,requestUrl);
+            return listenStatusCodeAndProcess(conn, requestUrl);
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -152,7 +146,7 @@ public class NetUtils {
         try {
 
             int code = conn.getResponseCode();
-            System.out.println("url:"+url+",  response code:" + code + ", msg:" + conn.getResponseMessage());
+            System.out.println("url:" + url + ",  response code:" + code + ", msg:" + conn.getResponseMessage());
             if (code == 200 || code == 201) {
                 String result = parserResponseResult(conn);
                 System.out.println("request sucess!  response info:" + result);

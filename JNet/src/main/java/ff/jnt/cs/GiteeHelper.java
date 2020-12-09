@@ -1,14 +1,14 @@
 package ff.jnt.cs;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import ff.jnt.NetUtils;
 import ff.jnt.utils.HttpType;
-import sun.misc.BASE64Encoder;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @Copyright © 2020 analysys Inc. All rights reserved.
@@ -19,17 +19,19 @@ import java.util.Map;
  */
 public class GiteeHelper {
 
-    public static void main(String[] args) {
-
-        String re = createFile("safei", "ceshi", "xx/" + System.nanoTime() + ".txt", "6fc360a0bb92c092e0ba02c460ecc699", "真的就是测试一下", "Upload from Java");
-        System.out.println(re);
-//        String re = createFile("safei", "ceshi", "xx/7.txt", "6fc360a0bb92c092e0ba02c460ecc699", "真的就是测试一下", "Upload from Java");
-//        System.out.println(re);
+//    public static void main(String[] args) {
+//
+////        String re = createFile("safei", "ceshi", "xx/" + System.nanoTime() + ".txt", "6fc360a0bb92c092e0ba02c460ecc699", "真的就是测试一下", "Upload from Java");
+////        System.out.println(re);
+////        String re = createFile("safei", "ceshi", "xx/7.txt", "6fc360a0bb92c092e0ba02c460ecc699", "真的就是测试一下", "Upload from Java");
+////        System.out.println(re);
 //        String sha = getSha("safei", "ceshi", "xx/6.txt", "6fc360a0bb92c092e0ba02c460ecc699");
 //        System.out.println("SHA:" + sha);
-//        updateContent("safei", "ceshi", "xx/6.txt", "6fc360a0bb92c092e0ba02c460ecc699", "what‘s that? 土鳖", "Upload from Java");
-//        deleteFile("safei", "ceshi", "xx/6.txt", "6fc360a0bb92c092e0ba02c460ecc699", "Upload from Java");
-    }
+////        updateContent("safei", "ceshi", "xx/6.txt", "6fc360a0bb92c092e0ba02c460ecc699", "what‘s that? 土鳖", "Upload from Java");
+////        deleteFile("safei", "ceshi", "xx/6.txt", "6fc360a0bb92c092e0ba02c460ecc699", "Upload from Java");
+//
+//
+//    }
 
     /**
      * gitee创建文件. need POST
@@ -58,7 +60,7 @@ public class GiteeHelper {
      */
     private static String createFile(String owner, String repo, String path, String token, String contentWillBase64, String commitMsg) {
 
-        String content = new BASE64Encoder().encode(contentWillBase64.getBytes(StandardCharsets.UTF_8));
+        String content = Base64.getEncoder().encodeToString(contentWillBase64.getBytes(StandardCharsets.UTF_8));
         // 据RFC 822规定，每76个字符，还需要加上一个回车换行
         // 有时就因为这些换行弄得出了问题，解决办法如下，替换所有换行和回车
         // result = result.replaceAll("[\\s*\t\n\r]", "");
@@ -144,7 +146,7 @@ public class GiteeHelper {
      */
     private static void updateContent(String owner, String repo, String path, String token, String contentWillBase64, String commitMsg) {
 
-        String content = new BASE64Encoder().encode(contentWillBase64.getBytes(StandardCharsets.UTF_8));
+        String content = Base64.getEncoder().encodeToString(contentWillBase64.getBytes(StandardCharsets.UTF_8));
         // 据RFC 822规定，每76个字符，还需要加上一个回车换行
         // 有时就因为这些换行弄得出了问题，解决办法如下，替换所有换行和回车
         // result = result.replaceAll("[\\s*\t\n\r]", "");
@@ -206,20 +208,25 @@ public class GiteeHelper {
             int timeout = 10 * 1000;
 
             String result = NetUtils.request(HttpType.GET, timeout, requestUrl, null, reqHeaderMap, null);
-            JSONObject obj = JSON.parseObject(result);
-//            System.out.println(obj);
-            if (obj.size() > 0) {
-                String url = obj.getString("url");
-//                System.out.println(url);
-//                System.out.println(requestUrl);
-                if (requestUrl.contains(url)) {
-//                    System.out.println("same requet url");
-                    return obj.getString("sha");
-                } else {
-                    System.err.println("request url diff!");
-                }
-            } else {
-                System.err.println("response json len is 0");
+//            JSONObject obj = JSON.parseObject(result);
+////            System.out.println(obj);
+//            if (obj.size() > 0) {
+//                String url = obj.getString("url");
+////                System.out.println(url);
+////                System.out.println(requestUrl);
+//                if (requestUrl.contains(url)) {
+////                    System.out.println("same requet url");
+//                    return obj.getString("sha");
+//                } else {
+//                    System.err.println("request url diff!");
+//                }
+//            } else {
+//                System.err.println("response json len is 0");
+//            }
+
+            Matcher matcher = Pattern.compile("\"sha\": *\"([^\"]+)\"").matcher(result.toString());
+            if (matcher.find()) {
+                return matcher.group(1);
             }
         } catch (Throwable e) {
             e.printStackTrace();
