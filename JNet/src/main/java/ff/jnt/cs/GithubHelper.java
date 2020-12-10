@@ -19,18 +19,19 @@ import java.util.regex.Pattern;
  */
 public class GithubHelper {
 
+    String token="bf9da1f3ff898fbeab57730517d29ed0c4c48cbb";
 
 //    public static void main(String[] args) {
-//        String res = createFile("hhhaiai", "Picture", "/test/7.txt", "1e8704dac7b0a5d94116971f012d12732577d3bc", "真的就是测试一下", "Upload from Java");
+//        String res = createFile("hhhaiai", "Picture", "/test/7.txt",token, "真的就是测试一下", "Upload from Java");
 //        System.out.println("链接: " + res);
-////        String sha = getSha("hhhaiai", "Picture", "/test/3.txt", "1e8704dac7b0a5d94116971f012d12732577d3bc");
+////        String sha = getSha("hhhaiai", "Picture", "/test/3.txt",token);
 ////        System.out.println("SHA:" + sha);
 //
-////        updateContent("hhhaiai", "Picture", "/test/3.txt", "1e8704dac7b0a5d94116971f012d12732577d3bc", "#1 what‘s that? 土鳖", "Upload from Java");
-////        deleteFile("hhhaiai", "Picture", "/test/1.txt", "1e8704dac7b0a5d94116971f012d12732577d3bc", "delete s", "who", "lary@gg.com");
-////        deleteFile("hhhaiai", "Picture", "/test/2.txt", "1e8704dac7b0a5d94116971f012d12732577d3bc", "delete s", "who", "lary@gg.com");
-////        deleteFile("hhhaiai", "Picture", "/test/3.txt", "1e8704dac7b0a5d94116971f012d12732577d3bc", "delete s", "who", "lary@gg.com");
-////        deleteFile("hhhaiai", "Picture", "/test/6.txt", "1e8704dac7b0a5d94116971f012d12732577d3bc", "delete s", "who", "lary@gg.com");
+////        updateContent("hhhaiai", "Picture", "/test/3.txt",token, "#1 what‘s that? 土鳖", "Upload from Java");
+////        deleteFile("hhhaiai", "Picture", "/test/1.txt",token, "delete s", "who", "lary@gg.com");
+////        deleteFile("hhhaiai", "Picture", "/test/2.txt",token, "delete s", "who", "lary@gg.com");
+////        deleteFile("hhhaiai", "Picture", "/test/3.txt",token, "delete s", "who", "lary@gg.com");
+////        deleteFile("hhhaiai", "Picture", "/test/6.txt",token, "delete s", "who", "lary@gg.com");
 //    }
 
     private static void updateContent(String owner, String repo, String path, String token, String contentWillBase64, String commitMsg) {
